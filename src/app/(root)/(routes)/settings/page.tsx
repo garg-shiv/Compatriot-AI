@@ -1,10 +1,10 @@
 import React from "react";
 
-import { checkSubscription } from "@/lib/subscription";
 import SubscriptionButton from "@/components/ui/subscription-button";
 
 export default async function SettingsPage() {
-  const isPro = await checkSubscription();
+  //const isPro = await checkSubscription();
+  const isPro = true;
 
   return (
     <div className="h-full p-4 space-y-2">

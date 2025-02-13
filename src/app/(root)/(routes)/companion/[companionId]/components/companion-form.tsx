@@ -94,7 +94,7 @@ export const CompanionForm = ({
 
             router.refresh(); 
             router.push("/");
-        } catch(error){
+        } catch{
             toast({
                 variant: "destructive",
                 description: "Something went wrong",

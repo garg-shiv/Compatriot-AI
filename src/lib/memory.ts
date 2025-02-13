@@ -94,7 +94,7 @@ public async init() {
   }
 
   public async seedChatHistory(
-    seedContent: String,
+    seedContent: string,
     delimiter: string = "\n",
     companionKey: CompanionKey
   ) {

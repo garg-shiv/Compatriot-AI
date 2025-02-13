@@ -1,8 +1,4 @@
-const ChatLayout = ( {
-    children
-}: {
-    children: React.ReactNode
-}) => {
+const ChatLayout = () => {
     return ( 
         <div
         className="mx-auto max-w-4xl h-full w-full">

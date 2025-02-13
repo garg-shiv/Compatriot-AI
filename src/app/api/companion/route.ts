@@ -2,7 +2,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
-import { checkSubscription } from "@/lib/subscription";
 
 export async function POST(req: Request) {
   try {
@@ -25,7 +24,8 @@ export async function POST(req: Request) {
       return new NextResponse("Missing Required Field.", { status: 400 });
     }
 
-    const isPro = await checkSubscription();
+    //const isPro = await checkSubscription();
+    const isPro = true;
 
     if (!isPro) {
       return new NextResponse(

@@ -43,7 +43,7 @@ export const ChatHeader = (
             router.push("/")
         } 
 
-        catch(error){
+        catch{
            toast(
             {
                 description: "Something went wrong.",

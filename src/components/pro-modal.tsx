@@ -19,7 +19,7 @@ export const ProModal = () => {
 
             window.location.href = response.data.url;
         }
-        catch(error){
+        catch{
             toast(
                 {
                  variant:"destructive",

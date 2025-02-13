@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import { streamText, LangChainAdapter } from "ai";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { LangChainAdapter } from "ai";
+import {  currentUser } from "@clerk/nextjs/server";
 import { Replicate } from "@langchain/community/llms/replicate";
 import { NextResponse } from "next/server";
 
@@ -26,9 +26,10 @@ export async function POST(
 
     if (!success)
       return new NextResponse("Ratelimit Exceeded!", { status: 429 });
-
+    
+    const {chatId} = await params;
     const companion = await prismadb.companion.update({
-      where: { id: params.chatId },
+      where: { id: chatId },
       data: {
         messages: {
           create: {

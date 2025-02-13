@@ -21,7 +21,7 @@ export default function SubscriptionButton({ isPro }: SubscriptionButtonProps) {
       const response = await axios.get("/api/stripe");
 
       window.location.href = response.data.url;
-    } catch (error) {
+    } catch  {
       toast({
         description: "Something Went Wrong!",
         variant: "destructive"
