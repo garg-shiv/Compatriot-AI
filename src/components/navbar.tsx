@@ -34,7 +34,7 @@ export default function Navbar({ isPro }: NavbarProps) {
               font.className
             )}
           >
-            companion.ai
+            compatriot.ai
           </h1>
         </Link>
       </div>
