@@ -5,21 +5,21 @@ import prismadb from "@/lib/prismadb";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { companionId: string } }
+  { params }: { params: Promise<{ companionId: string }>}
 ) {
   try {
+    const {companionId} = await params;
     const body = await req.json();
     const user = await currentUser();
     const { src, name, description, instructions, seed, categoryId } = body;
 
-    if (!params.companionId) {
+    if (!companionId) {
       return new NextResponse("Companion ID is Required.", { status: 400 });
     }
 
     if (!user || !user.id || !user.firstName) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-
     if (
       !src ||
       !name ||
@@ -43,7 +43,7 @@ export async function PATCH(
 
     const companion = await prismadb.companion.update({
       where: {
-        id: params.companionId,
+        id: companionId,
         userId: user.id
       },
       data: {
@@ -67,17 +67,17 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { companionId: string } }
+  { params }: { params: Promise<{ companionId: string }> }
 ) {
   try {
     const { userId } = await auth();
-
+    const {companionId}  = await params;
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     const companion = await prismadb.companion.delete({
       where: {
         userId,
-        id: params.companionId
+        id: companionId
       }
     });
 

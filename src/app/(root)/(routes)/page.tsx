@@ -3,15 +3,19 @@ import SearchInput from "@/components/ui/search-input";
 import { Categories } from "@/components/categories";
 import prismadb from "@/lib/prismadb";
 import { Companions } from "@/components/companions";
+/*
 interface RootPageProps {
   searchParams: {
     categoryId: string;
     name: string;
   };
 }
-
-export default async function RootPage({ searchParams }: RootPageProps) {
-  const {categoryId, name} = await searchParams;
+*/
+export default async function CategoryDetail({searchParams}: {searchParams: Promise<{
+  categoryId: string;
+  name: string;
+}>}) {
+ const {categoryId, name} = await searchParams;
   const data = await prismadb.companion.findMany({
     where: {
       categoryId: categoryId,

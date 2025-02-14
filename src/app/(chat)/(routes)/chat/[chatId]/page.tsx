@@ -4,22 +4,23 @@ import { redirect } from "next/navigation";
 
 import prismadb from "@/lib/prismadb";
 import ChatClient from "./components/client";
-
+/*
 interface ChatIdPageProps {
-  params: { chatId: string }; // ✅ params ko sahi type diya
+  chatId: string  
 }
-
-export default async function ChatIdPage({ params }: ChatIdPageProps) {
-  const { userId } = await auth(); // ✅ Auth ko await karna sahi hai
+*/
+export default async function chatIdPage({params}) {
+  const {chatId} = await params;  
+  const { userId } = await auth();
 
   if (!userId) return <RedirectToSignIn />;
 
-  if (!params?.chatId) {
+  if (!chatId) {
     throw new Error("Chat ID is missing");
   }
 
   const companion = await prismadb.companion.findUnique({
-    where: { id: params.chatId }, // ✅ Direct params.chatId use karo
+    where: { id: chatId }, 
     include: {
       messages: { orderBy: { createdAt: "asc" }, where: { userId } },
       _count: { select: { messages: true } }

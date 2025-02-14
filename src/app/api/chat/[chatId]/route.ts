@@ -2,8 +2,7 @@ import dotenv from "dotenv";
 import { LangChainAdapter } from "ai";
 import {  currentUser } from "@clerk/nextjs/server";
 import { Replicate } from "@langchain/community/llms/replicate";
-import { NextResponse } from "next/server";
-
+import { NextResponse,NextRequest } from "next/server";
 import { MemoryManager } from "@/lib/memory";
 import { ratelimit } from "@/lib/rate-limit";
 import prismadb from "@/lib/prismadb";
@@ -11,8 +10,8 @@ import prismadb from "@/lib/prismadb";
 dotenv.config({ path: `.env` });
 
 export async function POST(
-  request: Request,
-  { params }: { params: { chatId: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{chatId:string}>}
 ) {
   try {
     const { prompt } = await request.json();
@@ -87,7 +86,7 @@ export async function POST(
       ${recentChatHistory}\n${companion.name}:`
     );
 
-    return LangChainAdapter.toDataStreamResponse(stream); // ✅ Correct Usage
+    return LangChainAdapter.toDataStreamResponse(stream); 
 
   } catch (error) {
     console.error("[CHAT_POST]", error);
