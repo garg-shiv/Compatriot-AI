@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import { LangChainAdapter } from "ai";
-import {  currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { Replicate } from "@langchain/community/llms/replicate";
-import { NextResponse,NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { MemoryManager } from "@/lib/memory";
 import { ratelimit } from "@/lib/rate-limit";
 import prismadb from "@/lib/prismadb";
@@ -11,7 +11,7 @@ dotenv.config({ path: `.env` });
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{chatId:string}>}
+  { params }: { params: Promise<{ chatId: string }> }
 ) {
   try {
     const { prompt } = await request.json();
@@ -25,8 +25,8 @@ export async function POST(
 
     if (!success)
       return new NextResponse("Ratelimit Exceeded!", { status: 429 });
-    
-    const {chatId} = await params;
+
+    const { chatId } = await params;
     const companion = await prismadb.companion.update({
       where: { id: chatId },
       data: {
@@ -34,10 +34,10 @@ export async function POST(
           create: {
             content: prompt,
             role: "user",
-            userId: user.id
-          }
-        }
-      }
+            userId: user.id,
+          },
+        },
+      },
     });
 
     if (!companion)
@@ -49,7 +49,7 @@ export async function POST(
     const companionKey = {
       companionName: name,
       userId: user.id,
-      modelName: "llama2-13b"
+      modelName: "llama2-13b",
     };
 
     const memoryManager = await MemoryManager.getInstance();
@@ -60,15 +60,21 @@ export async function POST(
 
     await memoryManager.writeToHistory("User: " + prompt + "\n", companionKey);
 
-    const recentChatHistory = await memoryManager.readLatestHistory(companionKey);
-    const similarDocs = await memoryManager.vectorSearch(recentChatHistory, companion_file_name);
+    const recentChatHistory = await memoryManager.readLatestHistory(
+      companionKey
+    );
+    const similarDocs = await memoryManager.vectorSearch(
+      recentChatHistory,
+      companion_file_name
+    );
 
     let relevantHistory = "";
     if (!!similarDocs && similarDocs.length !== 0)
       relevantHistory = similarDocs.map((doc) => doc.pageContent).join("\n");
 
     const model = new Replicate({
-      model: "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+      model:
+        "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
       input: { max_length: 2048 },
       apiKey: process.env.REPLICATE_API_TOKEN,
     });
@@ -83,11 +89,47 @@ export async function POST(
       Below are relevant details about ${companion.name}'s past and the conversation you are in.
       ${relevantHistory}
 
-      ${recentChatHistory}\n${companion.name}:`
-    );
+      ${recentChatHistory}\n${companion.name}:`);
 
-    return LangChainAdapter.toDataStreamResponse(stream); 
+    let fullResponse = "";
 
+    const interceptingStream = new ReadableStream({
+      async start(controller) {
+        const reader = stream[Symbol.asyncIterator]();
+        while (true) {
+          const { value, done } = await reader.next();
+          if (done) break;
+          const text = value.toString();
+          fullResponse += text;
+          controller.enqueue(text);
+        }
+
+        // Persist AI message AFTER streaming ends
+        await memoryManager.writeToHistory(
+          `System: ${fullResponse}\n`,
+          companionKey,
+          "agent"
+        );
+
+        await prismadb.companion.update({
+          where:{
+            id:chatId,
+          },
+          data:{
+            messages:{
+              create:{
+                content: fullResponse.trim(),
+                role: "system",
+                userId: user.id,
+              }
+            }
+          }
+        });
+        controller.close();
+      },
+    });
+
+    return LangChainAdapter.toDataStreamResponse(interceptingStream);
   } catch (error) {
     console.error("[CHAT_POST]", error);
     return new NextResponse("Internal Error", { status: 500 });

@@ -1,9 +1,8 @@
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-
-import prismadb from "@/lib/prismadb";
 import ChatClient from "./components/client";
+import { getCompanions } from "@/fetchData/getCompanion";
 /*
 interface ChatIdPageProps {
   chatId: string  
@@ -19,13 +18,7 @@ export default async function chatIdPage({params}) {
     throw new Error("Chat ID is missing");
   }
 
-  const companion = await prismadb.companion.findUnique({
-    where: { id: chatId }, 
-    include: {
-      messages: { orderBy: { createdAt: "asc" }, where: { userId } },
-      _count: { select: { messages: true } }
-    }
-  });
+  const companion = await getCompanions({userId,chatId});
 
   if (!companion) return redirect("/");
 

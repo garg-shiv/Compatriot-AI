@@ -17,14 +17,13 @@ export class MemoryManager {
   public constructor() {
     this.history = Redis.fromEnv();
     this.vectorDBClient = new Pinecone({
-        apiKey: process.env.PINECONE_API_KEY!,
+      apiKey: process.env.PINECONE_API_KEY!,
     });
-}
+  }
 
-public async init() {
+  public async init() {
     console.log("Pinecone client initialized.");
-}
-
+  }
 
   public async vectorSearch(
     recentChatHistory: string,
@@ -62,7 +61,10 @@ public async init() {
     return `${companionKey.companionName}-${companionKey.modelName}-${companionKey.userId}`;
   }
 
-  public async writeToHistory(text: string, companionKey: CompanionKey) {
+  public async writeToHistory(text: string, companionKey: CompanionKey, role?:string) {
+    if(role){
+      console.log(role);
+    }
     if (!companionKey || typeof companionKey.userId == "undefined") {
       console.error("Companion Key Set Incorrectly!");
       return "";
@@ -71,8 +73,9 @@ public async init() {
     const key = this.generateRedisCompanionKey(companionKey);
     const result = await this.history.zadd(key, {
       score: Date.now(),
-      member: text
+      member: text,
     });
+    console.log("message saved:",role,"message: ",text);
 
     return result;
   }
@@ -85,7 +88,7 @@ public async init() {
 
     const key = this.generateRedisCompanionKey(companionKey);
     let result = await this.history.zrange(key, 0, Date.now(), {
-      byScore: true
+      byScore: true,
     });
 
     result = result.slice(-30).reverse();

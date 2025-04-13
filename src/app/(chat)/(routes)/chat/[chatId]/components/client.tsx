@@ -3,7 +3,7 @@
 import React, { FormEvent, useState } from "react";
 import { Companion, Message } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useCompletion } from "ai/react";
+import { useCompletion } from '@ai-sdk/react'
 
 import ChatMessages from "@/components/chat-messages";
 import { ChatMessageProps } from "@/components/chat-message";

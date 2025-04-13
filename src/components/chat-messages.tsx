@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ElementRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Companion } from "@prisma/client";
 
 import ChatMessage, { ChatMessageProps } from "@/components/chat-message";
@@ -16,7 +16,7 @@ export default function ChatMessages({
   isLoading,
   messages
 }: ChatMessagesProps) {
-  const scrollRef = useRef<ElementRef<"div">>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const [fakeLoading, setFakeLoading] = useState(
     messages.length === 0 ? true : false
@@ -46,7 +46,7 @@ export default function ChatMessages({
       />
       {messages.map((message) => (
         <ChatMessage
-          key={message.content}
+          key={`${message.content}+${Date.now.toString()}`}
           role={message.role}
           content={message.content}
           src={companion.src}
