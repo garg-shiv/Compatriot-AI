@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 Compatriot-AI
 
-## Getting Started
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Next.js](https://img.shields.io/badge/Next.js-15-blue)
+![React](https://img.shields.io/badge/React-18-blue)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3-blue)
+![Prisma](https://img.shields.io/badge/Prisma-5.0-blue)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
+![Stripe](https://img.shields.io/badge/Stripe-API-blue)
 
-First, run the development server:
+> 🚀 **Live Demo**: [compatriot-ai.vercel.app](https://compatriot-ai.vercel.app)
 
-```bash
+## 🧠 Overview
+
+**Compatriot-AI** is an AI-powered companion application built with the latest web technologies. It integrates advanced AI capabilities to provide users with intelligent interactions, seamless experiences, and robust functionalities.
+
+## 🔧 Tech Stack
+
+- **Frontend**: [Next.js 15](https://nextjs.org/), [React 18](https://reactjs.org/), [Tailwind CSS 3.3](https://tailwindcss.com/)
+- **Backend**: [Prisma 5.0](https://www.prisma.io/), [MySQL 8.0](https://www.mysql.com/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **Payments**: [Stripe API](https://stripe.com/docs/api)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+## 📁 Project Structure
+
+Compatriot-AI/
+├── prisma/ # Prisma schema and migrations
+├── public/ # Static assets
+├── src/
+│ ├── app/ # Next.js app directory
+│ ├── components/ # Reusable UI components
+│ ├── lib/ # Utility functions and libraries
+│ ├── styles/ # Global styles
+│ └── pages/ # Application pages
+├── .gitignore
+├── README.md
+├── next.config.ts
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
+
+markdown
+Copy
+Edit
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 18.x
+- MySQL >= 8.0
+- Stripe Account (for payment integration)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/garg-shiv/Compatriot-AI.git
+   cd Compatriot-AI
+Install dependencies:
+
+bash
+Copy
+Edit
+npm install
+# or
+yarn install
+Set up environment variables:
+
+Create a .env file in the root directory and add the following:
+
+env
+Copy
+Edit
+DATABASE_URL="mysql://user:password@localhost:3306/compatriot_ai"
+NEXTAUTH_SECRET="your_nextauth_secret"
+STRIPE_SECRET_KEY="your_stripe_secret_key"
+STRIPE_PUBLIC_KEY="your_stripe_public_key"
+Run database migrations:
+
+bash
+Copy
+Edit
+npx prisma migrate dev --name init
+Start the development server:
+
+bash
+Copy
+Edit
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open http://localhost:3000 in your browser to view the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🧪 Features
+AI-Powered Interactions: Engage with intelligent AI companions.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+User Authentication: Secure login and registration using NextAuth.js.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Payment Integration: Seamless transactions via Stripe.
 
-## Learn More
+Responsive Design: Optimized for all devices with Tailwind CSS.
 
-To learn more about Next.js, take a look at the following resources:
+Database Management: Efficient data handling with Prisma and MySQL.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+📸 Screenshots
+Coming soon...
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🧑‍💻 Author
+Shivanshu Garg – GitHub
 
-## Deploy on Vercel
+📄 License
+This project is licensed under the MIT License.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
